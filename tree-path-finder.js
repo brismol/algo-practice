@@ -6,6 +6,12 @@ class Node {
   }
 }
 
+const reverse = (root, target) => {
+  const path = pathFinder(root, target);
+
+  return path ? path.reverse() : null;
+};
+
 const pathFinder = (root, target) => {
   if (!root) return null;
   if (root.val === target) return [target];
@@ -13,12 +19,12 @@ const pathFinder = (root, target) => {
   const left = pathFinder(root.left, target);
 
   if (left) {
-    left.unshift(root.val);
+    left.push(root.val);
     return left;
   }
   const right = pathFinder(root.right, target);
   if (right) {
-    right.unshift(root.val);
+    right.push(root.val);
     return right;
   }
 
@@ -44,4 +50,4 @@ c.right = f;
 //  / \     \
 // d   e     f
 
-console.log(pathFinder(a, 'e')); // -> [ 'a', 'b', 'e' ]
+console.log(reverse(a, 'e')); // -> [ 'a', 'b', 'e' ]
