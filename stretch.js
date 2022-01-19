@@ -1,14 +1,7 @@
 const _ = require('lodash');
 
-const arr = [
-  [1, 2],
-  [4, 'asdf'],
-  [6, 09],
-  [22, 123],
-];
+const values = { 1: 'hello', 2: 'goodbye' };
 
-console.log(
-  _.sortedIndexOf(arr, 22, function (x) {
-    x[0];
-  })
-);
+delete values[2];
+
+console.log(values);
