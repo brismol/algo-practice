@@ -1,31 +1,93 @@
 class LRU {
-  constructor(size) {
+  constructor(cacheSize) {
+    this.maxSize = cacheSize;
     this.head = null;
     this.tail = null;
-    this.maxSize = size;
     this.currentSize = 0;
-    this.map = {};
+    this.storedPages = {};
   }
 
-  add(value) {
-    if (map[value]) {
-      //remove then add to back
-      const foundNode = map[value];
-
-      //size doesn't change
+  requestpage(val) {
+    if (this.storedPages[val]) {
+      this.movePageToBack(val);
     } else {
-      //create new node
-      //add to back and to map
-      //size++
-      //if size > max dequeue oldest value and remove from hash. currentSize--
+      this.enqueue(val);
+    }
+
+    return this.storedPages[val];
+  }
+
+  movePageToBack(val) {
+    if (this.currentSize === 1) return;
+
+    if (this.tail === val) return;
+    const page = this.storedPages[val];
+    if (this.head === page) {
+      this.head = this.head.next;
+      this.head.prev = null;
+    } else {
+      page.prev.next = page.next;
+      page.next.prev = page.prev;
+    }
+
+    this.tail.next = page;
+    page.prev = this.tail;
+    page.next = null;
+    this.tail = page;
+    return;
+  }
+
+  enqueue(val) {
+    const page = new pageNode(val);
+    this.storedPages[val] = page;
+
+    if (this.head === null) {
+      this.head = page;
+      this.tail = page;
+    } else {
+      this.tail.next = page;
+      page.prev = this.tail;
+      this.tail = page;
+    }
+    this.currentSize++;
+
+    if (this.currentSize > this.maxSize) {
+      this.dequeue();
+    }
+  }
+
+  dequeue() {
+    if (this.head === null) {
+      console.log('the queue is empty');
+    } else {
+      const returnNode = this.head;
+      delete this.storedPages[returnNode.val];
+      this.currentSize--;
+      if (this.head === this.tail) {
+        this.tail = null;
+        this.head = null;
+      } else {
+        this.head = this.head.next;
+        this.head.prev = null;
+      }
+
+      return returnNode;
+    }
+  }
+
+  print() {
+    let current = this.head;
+    while (current) {
+      console.log('***' + current.val + '***');
+      current = current.next;
     }
   }
 }
 
-class Node {
+class pageNode {
   constructor(val) {
     this.val = val;
-    this.next = null;
     this.prev = null;
+    this.next = null;
   }
 }
