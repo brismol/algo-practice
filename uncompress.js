@@ -1,23 +1,24 @@
 const uncompress = (s) => {
-  const final = [];
+  const decom = [];
 
-  let num = [];
+  let slow = 0;
+  let fast = 0;
 
-  let i = 0;
-  let j = 0;
+  while (fast <= s.length) {
+    if (isNaN(s[fast])) {
+      const num = s.slice(slow, fast) * 1;
+      const char = s[fast];
 
-  while (i < s.length) {
-    if (isNaN(s[i])) {
-      const multiplier = s.slice(j, i) * 1;
-      for (let m = 0; m < multiplier; m++) {
-        final.push(s[i]);
+      for (let i = 0; i < num; i++) {
+        decom.push(char);
       }
-      i++;
-      j = i;
+
+      fast++;
+      slow = fast;
     } else {
-      i++;
+      fast++;
     }
   }
 
-  return final.join('');
+  return decom.join('');
 };
